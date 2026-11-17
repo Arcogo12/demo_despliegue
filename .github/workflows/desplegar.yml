@@ -1,37 +1,34 @@
-name: Despliegue y Validación PHP
+name: Comprobar script y preparar version 
 
 on:
   push:
-    branches: [ "master", "main" ]
-  pull_request:
-    branches: [ "master", "main" ]
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
 
 jobs:
-  validar-y-desplegar:
-    runs-on: ubuntu-latest
-
+  preparar:
+    runs-on: windows-latest
     steps:
-      - name: Descargar repositorio
+      - name: Descargar código
         uses: actions/checkout@v4
 
       - name: Configurar PHP
         uses: shivammathur/setup-php@v2
         with:
-          php-version: '8.3'
+          php-version: '8.2'
+          coverage: none
 
-      - name: Validar sintaxis PHP (Linter)
-        run: |
-          echo "Verificando sintaxis del archivo origen..."
-          php -l origen/index.php
+      - name: Ejecutar script
+        shell: pwsh
+        run: .\desplegar.PS1 -RutaPHP 'php'
 
-      - name: Desplegar a ambiente de pruebas
-        run: |
-          echo "Copiando archivo a pruebas..."
-          cp origen/index.php pruebas/index.php
-          echo "Despliegue local a pruebas completado con éxito."
-
-      - name: Subir artefacto de versión desplegada (Opcional)
+      - name: Guardar version preparada
         uses: actions/upload-artifact@v4
         with:
-          name: version-pruebas
-          path: pruebas/
+          name: version-preparada
+          path: pruebas/index.php
+          if-no-files-found: error
