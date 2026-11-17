@@ -13,4 +13,4 @@ if ($LASTEXITCODE -ne 0) {
 }
 Copy-Item $archivoOrigen $archivoDestino -Force -ErrorAction Stop
 Write-Host "Version publicada en el ambiente de pruebas."
-& 'C:\laragon\bin\php\php-8.3.30-Win32-vs16-x64\php.exe' -S localhost:8000 -t .\pruebas
+& $RutaPHP -S localhost:8000 -t .\pruebas

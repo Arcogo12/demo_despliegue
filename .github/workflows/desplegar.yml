@@ -1,0 +1,37 @@
+name: Despliegue y Validación PHP
+
+on:
+  push:
+    branches: [ "master", "main" ]
+  pull_request:
+    branches: [ "master", "main" ]
+
+jobs:
+  validar-y-desplegar:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Descargar repositorio
+        uses: actions/checkout@v4
+
+      - name: Configurar PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+
+      - name: Validar sintaxis PHP (Linter)
+        run: |
+          echo "Verificando sintaxis del archivo origen..."
+          php -l origen/index.php
+
+      - name: Desplegar a ambiente de pruebas
+        run: |
+          echo "Copiando archivo a pruebas..."
+          cp origen/index.php pruebas/index.php
+          echo "Despliegue local a pruebas completado con éxito."
+
+      - name: Subir artefacto de versión desplegada (Opcional)
+        uses: actions/upload-artifact@v4
+        with:
+          name: version-pruebas
+          path: pruebas/
