@@ -1,4 +1,4 @@
-name: Comprobar script y preparar version 
+name: Comprobar script y preparar version 1
 
 on:
   push:
